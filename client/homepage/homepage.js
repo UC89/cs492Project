@@ -17,3 +17,11 @@ Template.homepage.events = {
 		Router.go('/receiveMessage');
 	}
 }
+
+Template.homepage.onRendered(function() {
+console.log('homepage rendered');
+});
+
+Template.homepage.onCreated =function() {
+	console.log('homepage created');
+}

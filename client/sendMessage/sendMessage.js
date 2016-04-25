@@ -1,0 +1,1 @@
+console.log('On send message page');

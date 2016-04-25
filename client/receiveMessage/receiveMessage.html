@@ -1,3 +1,22 @@
 <template name="receiveMessage">
+	<div class='receiveMessage'>
+		<div class='container-fluid'>
+			<div class='row align-center'>
+				<h1>Receive Message</h1>
+				<div class='col-md-12 video-window'>
+			       <div class="demo-frame">
+					    <div class="media demo-container">
+					      <video id="faceVideo" width="320" height="240" preload autoplay loop muted></video>
+					      <canvas id="faceCanvas" width="320" height="240"></canvas>
+					    </div>
+  					</div>
+				</div>
 
+				<div class='col-md-12'>
+					<textarea class='message' id='messageContents' placeholder='Message should be here'>
+					</textarea>
+				</div>
+			</div>
+		</div>
+	</div>
 </template>

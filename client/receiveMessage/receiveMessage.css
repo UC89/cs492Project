@@ -1,0 +1,17 @@
+.receiveMessage {
+	padding-top: 80px;
+	margin-top: 80px;
+	padding-left: 40px;
+	padding-right: 40px;
+	min-height:640px;
+	min-width: 640px;
+}
+
+video, canvas {
+	position:absolute;
+  }
+
+#messageContents {
+	position:absolute;
+	top:300px;
+}
