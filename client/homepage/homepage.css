@@ -1,0 +1,12 @@
+.signup-form {
+	position: absolute;
+	background-color: white;
+	border-radius: 10px;
+	padding: 10px;
+	display: none;
+	position: absolute;
+	width: 300px;
+	margin-left: -100px;
+	top: 25%;
+	left: 50%;
+}

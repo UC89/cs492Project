@@ -1,0 +1,44 @@
+<template name='navbar'>
+	<nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+	  <div class='container-fluid'>
+	  	<div class='navbar-header'>
+	  		<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#collapse-items" aria-expanded="false">
+	  			<span class="sr-only">Toggle navigation</span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	  		</button>
+	  		<a class='navbar-header-custom navbar-brand' href='/'>CryptoMessage</a>
+	  	</div>
+<!--Navbar elements for wide screen -->
+			{{# if currentUser}}
+				<div class='collapse navbar-collapse' id='collapse-items'>
+					<ul class='nav navbar-nav'>
+						<li><a href='/sendMessage'>Send Message</a></li>
+						<li><a href='/receiveMessage' id='add-goal-button'>Get Messages</a></li>
+					</ul>
+					<div class='navbar-right'>
+						<p class='navbar-text'>Logged in as {{ currentUser.username }}</p>
+						<form class='navbar-form navbar-right'>
+							<div class='form-group'>
+				  			<button class='btn btn-default' type='button' id='logout-button'>Log Out</button>
+				  		</div>
+				  	</form>
+			  	</div>
+			  </div>
+			{{else}}
+				<div class='collapse navbar-collapse' id='collapse-items'>
+					<form class='navbar-form navbar-right' role='login'>
+						<div class='form-group'>
+							<input type='text' class='form-control' id='login-username' placeholder='Username'>
+							<input type='password' class='form-control' id='login-password' placeholder='password'>
+							<button class='btn btn-default' type='button' id='login-button'>Log In</button>
+							<button id='signup-button' class='btn btn-default' type='button' >Sign up</button>
+						</div>
+					</form>
+				</div>
+			{{/ if}}
+
+	  </div>
+	</nav>
+</template>
