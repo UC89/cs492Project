@@ -1,5 +1,6 @@
 <template name='homepage'>
-  <body background='locksOnFence.jpeg'>
+  <body>
+  <!--body background='locksOnFence.jpeg'-->
 	<form class='signup-form'>
     <div class="form-group">
       <label for="usernameInput">Username</label>
@@ -22,6 +23,22 @@
   	  <button type="button" class="btn btn-default" id='cancel-signup'>Cancel</button>
   	 </div>
   </form>
+
+  <div class='container-fluid message-list'>
+    <div class='row'>
+      {{#each userMessages}}
+      <div class='col-sm-3'>
+        {{toUser}}
+      </div>
+      <div class='col-sm-6'>
+        <a href='receiveMessage/{{_id}}'>{{messageContents}}</a>
+      </div>
+      <div class='col-sm-3'>
+        {{timeSent}}
+      </div>
+      {{/each}}
+    </div>
+  </div>
 </body>
 
 </template>

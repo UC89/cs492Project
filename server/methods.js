@@ -6,5 +6,12 @@ Meteor.methods({
 		let profile = {};
 		var newUser = {'username':userName,'email':email,'password':password_1,'joinDate':createdAt};
 		Accounts.createUser(newUser);
+	},
+	addMessage: function(messageContents,toUser,fromUser,timeSent) {
+		if (!Meteor.userId()) {
+			throw new Meteor.Error('Must Be Logged In To Do That');
+		}
+
+		Messages.insert({messageContents,toUser,fromUser,timeSent});
 	}
 });

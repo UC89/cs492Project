@@ -22,6 +22,13 @@ Template.homepage.onRendered(function() {
 console.log('homepage rendered');
 });
 
-Template.homepage.onCreated =function() {
+Template.homepage.onCreated(function() {
 	console.log('homepage created');
-}
+});
+
+Template.homepage.helpers({
+	userMessages: function() {
+		var userMessages = Messages.find();
+		return userMessages
+	}
+})
