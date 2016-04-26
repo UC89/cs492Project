@@ -23,34 +23,39 @@ Template.receiveMessage.onRendered(function() {
     getUserMedia.call(navigator, constraints, successCallback, errorCallback);
   });
 
-}
+  }
 
-// Older browsers might not implement mediaDevices at all, so we set an empty object first
-if(navigator.mediaDevices === undefined) {
-  navigator.mediaDevices = {};
-}
+  // Older browsers might not implement mediaDevices at all, so we set an empty object first
+  if(navigator.mediaDevices === undefined) {
+    navigator.mediaDevices = {};
+  }
 
-// Some browsers partially implement mediaDevices. We can't just assign an object
-// with getUserMedia as it would overwrite existing properties.
-// Here, we will just add the getUserMedia property if it's missing.
-if(navigator.mediaDevices.getUserMedia === undefined) {
-  navigator.mediaDevices.getUserMedia = promisifiedOldGUM;
-}
+  // Some browsers partially implement mediaDevices. We can't just assign an object
+  // with getUserMedia as it would overwrite existing properties.
+  // Here, we will just add the getUserMedia property if it's missing.
+  if(navigator.mediaDevices.getUserMedia === undefined) {
+    navigator.mediaDevices.getUserMedia = promisifiedOldGUM;
+  }
 
 
-// Prefer camera resolution nearest to 1280x720.
-var constraints = { audio: true, video: { width: 1280, height: 720 } };
+  // Prefer camera resolution nearest to 1280x720.
+  var constraints = { audio: false, video: { width: 1280, height: 720 } };
 
-navigator.mediaDevices.getUserMedia(constraints)
-.then(function(stream) {
-  var video = document.querySelector('#faceVideo');
-  video.src = window.URL.createObjectURL(stream);
-  console.log('Video url: '+video.src);
-  video.onloadedmetadata = function(e) {
-    video.play();
-  };
-})
-.catch(function(err) {
-  console.log(err.name + ": " + err.message);
-});
+  navigator.mediaDevices.getUserMedia(constraints)
+  .then(function(stream) {
+    var video = document.querySelector('#faceVideo');
+    video.src = window.URL.createObjectURL(stream);
+    console.log('Video url: '+video.src);
+    video.onloadedmetadata = function(e) {
+      video.play();
+    };
+  })
+  .catch(function(err) {
+    console.log(err.name + ": " + err.message);
+  });
+
+  var ctracker = new clm.tracker();
+  ctracker.init(pModel);
+  ctracker.start(video);
+
 });
