@@ -1,30 +1,56 @@
 console.log('on receive message page!');
 
-Template.receiveMessage.onRendered(function() {
-    console.log('Is this running top?');
-    var video = document.getElementById('faceVideo');
-    var canvas = document.getElementById('faceCanvas');
-    var context = canvas.getContext('2d');
-    var tracker = new tracking.ObjectTracker('face');
-    tracker.setInitialScale(4);
-    tracker.setStepSize(2);
-    tracker.setEdgesDensity(0.1);
-    tracking.track('#faceVideo', tracker, { camera: true });
-    tracker.on('track', function(event) {
-      context.clearRect(0, 0, canvas.width, canvas.height);
-      event.data.forEach(function(rect) {
-        context.strokeStyle = '#a64ceb';
-        context.strokeRect(rect.x, rect.y, rect.width, rect.height);
-        context.font = '11px Helvetica';
-        context.fillStyle = "#fff";
-        context.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11);
-        context.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
-      });
-    });
-    var gui = new dat.GUI();
-    gui.add(tracker, 'edgesDensity', 0.1, 0.5).step(0.01);
-    gui.add(tracker, 'initialScale', 1.0, 10.0).step(0.1);
-    gui.add(tracker, 'stepSize', 1, 5).step(0.1);
-    console.log('This all ran!');
+Template.receiveMessage.onDestroyed(function() {
+  tracker.stop();
+})
 
+Template.receiveMessage.onRendered(function() {
+  var promisifiedOldGUM = function(constraints, successCallback, errorCallback) {
+
+  // First get ahold of getUserMedia, if present
+  var getUserMedia = (navigator.getUserMedia ||
+      navigator.webkitGetUserMedia ||
+      navigator.mozGetUserMedia);
+
+  // Some browsers just don't implement it - return a rejected promise with an error
+  // to keep a consistent interface
+  if(!getUserMedia) {
+    return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
+  }
+
+  // Otherwise, wrap the call to the old navigator.getUserMedia with a Promise
+  return new Promise(function(successCallback, errorCallback) {
+    getUserMedia.call(navigator, constraints, successCallback, errorCallback);
+  });
+
+}
+
+// Older browsers might not implement mediaDevices at all, so we set an empty object first
+if(navigator.mediaDevices === undefined) {
+  navigator.mediaDevices = {};
+}
+
+// Some browsers partially implement mediaDevices. We can't just assign an object
+// with getUserMedia as it would overwrite existing properties.
+// Here, we will just add the getUserMedia property if it's missing.
+if(navigator.mediaDevices.getUserMedia === undefined) {
+  navigator.mediaDevices.getUserMedia = promisifiedOldGUM;
+}
+
+
+// Prefer camera resolution nearest to 1280x720.
+var constraints = { audio: true, video: { width: 1280, height: 720 } };
+
+navigator.mediaDevices.getUserMedia(constraints)
+.then(function(stream) {
+  var video = document.querySelector('#faceVideo');
+  video.src = window.URL.createObjectURL(stream);
+  console.log('Video url: '+video.src);
+  video.onloadedmetadata = function(e) {
+    video.play();
+  };
+})
+.catch(function(err) {
+  console.log(err.name + ": " + err.message);
+});
 });
