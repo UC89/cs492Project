@@ -1,3 +1,11 @@
+//To do
+//Complete conversion of message to Ascii values
+//Encrypt message and store encrypted message
+//Store private key for user just in case for demo
+//Get decrypt button to actually attempt to decrypt and change message in message box
+
+
+
 console.log('On send message page');
 
 Template.sendMessage.events = {
@@ -17,4 +25,12 @@ Template.sendMessage.events = {
 	Router.go('/');
 
 	}
+}
+
+function returnStringInAscii(message) {
+	asciiArray = []
+	for (var i = 0, len = message.length; i < len; i++) {
+  	asciiArray.push(message[i]);
+	}
+
 }

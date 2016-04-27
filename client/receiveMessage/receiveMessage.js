@@ -109,7 +109,9 @@ var trackerTask = tracking.track('#faceVideo', objects);
     trackerTask.stop();
     //console.log("DetectionObject : "+detection);
   });
+
   $( "#decryptButton" ).click(function() {
+    //var res = String.fromCharCode(72, 69, 76, 76, 79);
     console.log('Clicked Decrypt: ')
     console.log("DetectionObject : "+detection);
     if (detection.length < 2) {
@@ -119,8 +121,23 @@ var trackerTask = tracking.track('#faceVideo', objects);
     console.log("Detection 1: "+detection[0].x+" Eye 2: "+detection[1].width)
     $('#messageContents').attr('value','Attempt to decrypt');
     primes = getFacePrimes(detection);
-
   });
+
+
+  $( "#publicKeyGen" ).click(function() {
+    console.log("Generate public key");
+    trackerTask.stop();
+    if (detection.length < 2) {
+      console.log("Try again");
+      alert("Try again");
+    }
+    console.log("Detection 1: "+detection[0].x+" Eye 2: "+detection[1].width)
+    $('#messageContents').attr('value','Attempt to decrypt');
+    primes = getFacePrimes(detection);
+    publicKey = generatePublicKey(primes);
+    Meteor.call('addPublicKey',publicKey);
+  });
+
 });
 
 
@@ -181,5 +198,35 @@ function getFacePrimes(faceMeasurements) {
   return primeArray;
 }
 
+function generatePublicKey(primes) {
+  var n = primes[0] * primes[1];
+  var totient = (primes[0]-1) * (primes[1]-1);
+  e=0;
+  var randomPrimeFound = false
+  while (!randomPrimeFound) {
+    e = getRandomInt(3,totient);
+    if (isPrime(e)) {
+      randomPrimeFound=true;
+    }
+  }
+  console.log("p: "+primes[0]+ "q: "+primes[1]+ " n: "+n+" totient: "+totient + " random: "+e);
+  var d = xgcd(e,totient);
+  console.log("modular multiplicative inverse: "+d)
+  return [e,n];
+
+}
+
+function xgcd(e, totient) {
+
+   if (totient == 0) {
+     return [1, 0, e];
+   }
+
+   temp = xgcd(totient, e % totient);
+   x = temp[0];
+   y = temp[1];
+   d = temp[2];
+   return x-y*Math.floor(e/totient);
+ }
 
 
