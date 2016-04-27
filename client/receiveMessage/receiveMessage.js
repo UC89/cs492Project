@@ -112,8 +112,13 @@ var trackerTask = tracking.track('#faceVideo', objects);
   $( "#decryptButton" ).click(function() {
     console.log('Clicked Decrypt: ')
     console.log("DetectionObject : "+detection);
-    console.log("Detection 1: "+detection[0].x+" Eye 2: "+detection[1].x)
+    if (detection.length < 2) {
+      console.log("Try again");
+      alert("Try again");
+    }
+    console.log("Detection 1: "+detection[0].x+" Eye 2: "+detection[1].width)
     $('#messageContents').attr('value','Attempt to decrypt');
+    primes = getFacePrimes(detection);
 
   });
 });
@@ -136,13 +141,44 @@ function getRandomInt(min, max) {
 }
 
 function getFacePrimes(faceMeasurements) {
-  var myStringArray = ["Hello","World"];
-  var arrayLength = myStringArray.length;
-    for (var i = 0; i < arrayLength; i++) {
-    alert(myStringArray[i]);
-    //Do something
+  var primesFound = false;
+  var seed = Math.round(faceMeasurements[0].x - faceMeasurements[1].x);
+  seed = Math.pow(seed,2);
+
+  var firstPrimeFound=false;
+  var secondPrimeFound=false;
+  var primeArray = [0,0];
+  while (primesFound ===false) {
+    while (firstPrimeFound ==false) {
+      if (isPrime(seed)) {
+        primeArray[0]=seed;
+        firstPrimeFound=true;
+        seed+=1
+      }
+      else if(seed%2 == 0) {
+        seed+=1;
+      }
+      else if(!isPrime(seed)) {
+        seed+=2;
+      }
+    }
+    while (firstPrimeFound ==true && secondPrimeFound==false) {
+      if (isPrime(seed)) {
+        primeArray[1]=seed;
+        secondPrimeFound=true;
+        primesFound = true;
+      }
+      else if(seed%2 == 0) {
+        seed+=1;
+      }
+      else if(!isPrime(seed)) {
+        seed+=2;
+      }
+
+    }
   }
-  return [11,17];
+  console.log("Returning prime array: "+primeArray);
+  return primeArray;
 }
 
 
