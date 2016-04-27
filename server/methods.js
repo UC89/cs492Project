@@ -11,11 +11,11 @@ Meteor.methods({
 		var user = Meteor.user().username;
 		PublicKeys.insert({user,publicKey});
 	},
-	addMessage: function(messageContents,toUser,fromUser,timeSent) {
+	addMessage: function(messageContents,messsageContentsEncrypted,encryptedPlain,toUser,fromUser,timeSent) {
 		if (!Meteor.userId()) {
 			throw new Meteor.Error('Must Be Logged In To Do That');
 		}
 
-		Messages.insert({messageContents,toUser,fromUser,timeSent});
+		Messages.insert({messageContents,messsageContentsEncrypted,encryptedPlain,toUser,fromUser,timeSent});
 	}
 });

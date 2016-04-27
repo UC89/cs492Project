@@ -19,8 +19,9 @@
 
 				</div>
 				<div class='col-md-12'>
-					<textarea class='message' id='messageContents' placeholder={{this.messageContents}}>
-						{{this.messageContents}}
+					<p id='messageId'>{{this._id}}</p>
+					<textarea class='message' id='messageContents'>
+						{{this.encryptedPlain}}
 					</textarea>
 				</div>
 

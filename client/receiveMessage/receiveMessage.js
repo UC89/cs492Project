@@ -118,9 +118,20 @@ var trackerTask = tracking.track('#faceVideo', objects);
       console.log("Try again");
       alert("Try again");
     }
-    console.log("Detection 1: "+detection[0].x+" Eye 2: "+detection[1].width)
-    $('#messageContents').attr('value','Attempt to decrypt');
+    var messageId = $('#messageId').text();
+    console.log("Message ID: "+messageId);
+    var cryptoText = $('textarea#messageContents').val();
+    cryptoArray = Messages.find(messageId).fetch();
+    console.log("CryptoArray: "+cryptoArray);
+    console.log("Crypto 0 : "+cryptoArray[0]);
+    console.log("Crypto: "+cryptoArray[0]['messageContentsEncrypted']);
+
+    $('#messageContents').attr ('value','Attempt to decrypt');
     primes = getFacePrimes(detection);
+    var decryptMessageOut = decryptMessage(cryptoArray,detection);
+    console.log("Decrypted: "+decryptMessageOut)
+    $('#messageContents').attr ('value',decryptMessageOut);
+
   });
 
 
@@ -135,6 +146,8 @@ var trackerTask = tracking.track('#faceVideo', objects);
     $('#messageContents').attr('value','Attempt to decrypt');
     primes = getFacePrimes(detection);
     publicKey = generatePublicKey(primes);
+    publicKey = [publicKey[0],publicKey[1]]
+
     Meteor.call('addPublicKey',publicKey);
   });
 
@@ -159,9 +172,8 @@ function getRandomInt(min, max) {
 
 function getFacePrimes(faceMeasurements) {
   var primesFound = false;
-  var seed = Math.round(faceMeasurements[0].x - faceMeasurements[1].x);
-  seed = Math.pow(seed,2);
-
+  var seed = Math.round((faceMeasurements[1].x - faceMeasurements[0].x)/2);
+  //Had to change seed, e ended up becoming too big to encrypt message
   var firstPrimeFound=false;
   var secondPrimeFound=false;
   var primeArray = [0,0];
@@ -198,13 +210,14 @@ function getFacePrimes(faceMeasurements) {
   return primeArray;
 }
 
+//Public key is stored as e,n
 function generatePublicKey(primes) {
   var n = primes[0] * primes[1];
   var totient = (primes[0]-1) * (primes[1]-1);
   e=0;
   var randomPrimeFound = false
   while (!randomPrimeFound) {
-    e = getRandomInt(3,totient);
+    e = getRandomInt(3,totient/4);
     if (isPrime(e)) {
       randomPrimeFound=true;
     }
@@ -212,7 +225,7 @@ function generatePublicKey(primes) {
   console.log("p: "+primes[0]+ "q: "+primes[1]+ " n: "+n+" totient: "+totient + " random: "+e);
   var d = xgcd(e,totient);
   console.log("modular multiplicative inverse: "+d)
-  return [e,n];
+  return [e,n,d];
 
 }
 
@@ -229,4 +242,29 @@ function xgcd(e, totient) {
    return x-y*Math.floor(e/totient);
  }
 
+//c^d mod n
+function decryptMessage(messageArray,faceMeasurements) {
+  primes = getFacePrimes(faceMeasurements);
+  key = generatePublicKey(primes);
+  decryptArrayAscii = []
+  decryptArray = []
+
+  var d = key[2];
+  var n = key[1];
+  for (var i = 0, len = messageArray.length; i < len; i++) {
+    decryptArrayAscii.push(Math.pow(messageArray[i],d)%n)
+    decryptArray.push(convertAsciiToPlain(decryptArrayAscii[i]))
+  }
+  console.log("DecryptArray: "+decryptArrayAscii);
+  console.log("DecryptPlainArray: "+decryptArray)
+
+  decryptString = decryptArray.join("");
+  console.log("Should return: "+decryptString);
+  return decryptString;
+}
+
+function convertAsciiToPlain(asciiChar) {
+  characterReturn = String.fromCharCode(asciiChar%127);
+  return characterReturn;
+}
 
