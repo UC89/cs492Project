@@ -1,5 +1,5 @@
 .receiveMessage {
-	padding-top: 80px;
+	padding-top: 40px;
 	margin-top: 80px;
 	padding-left: 40px;
 	padding-right: 40px;
@@ -13,5 +13,6 @@ video, canvas {
 
 #messageContents {
 	position:absolute;
-	top:300px;
+	top:-150px;
+	width: 640px;
 }

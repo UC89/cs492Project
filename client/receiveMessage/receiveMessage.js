@@ -70,11 +70,13 @@ Template.receiveMessage.onRendered(function() {
   objects.on('track', function(event) {
   if (event.data.length === 0) {
     // No objects were detected in this frame.
-  } else {
+  }
+  else if (event.data.length === 2) {
+    console.log("FOUND 2 EYES!!!!!");
     context.clearRect(0, 0, canvas.width, canvas.height);
     event.data.forEach(function(rect) {
       console.log(rect.x)
-      let detection = rect.width;
+      detection = event.data;
 
 
       context.strokeStyle = '#a64ceb';
@@ -83,9 +85,10 @@ Template.receiveMessage.onRendered(function() {
       context.fillStyle = "#fff";
       context.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11);
       context.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
-
-
     });
+  }
+  else {
+      console.log("Sorry, you need another Eye!");
   }
   //console.log("Is Prime: "+isPrime(9));
 });
@@ -104,11 +107,14 @@ var trackerTask = tracking.track('#faceVideo', objects);
   $( "#endTracker" ).click(function() {
     console.log('endTracker: ')
     trackerTask.stop();
-    console.log("DetectionObject : "+detection);
+    //console.log("DetectionObject : "+detection);
   });
-  $( "#decryptTracker" ).click(function() {
+  $( "#decryptButton" ).click(function() {
     console.log('Clicked Decrypt: ')
     console.log("DetectionObject : "+detection);
+    console.log("Detection 1: "+detection[0].x+" Eye 2: "+detection[1].x)
+    $('#messageContents').attr('value','Attempt to decrypt');
+
   });
 });
 

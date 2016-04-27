@@ -6,22 +6,22 @@
 				<div class='col-md-12 video-window'>
 			       <div class="demo-frame">
 					    <div class="media demo-container">
-					      <video id="faceVideo" width="320" height="240" preload autoplay loop muted></video>
-					      <canvas id="faceCanvas" width="320" height="240"></canvas>
+					      <video id="faceVideo" width="640" height="480" preload autoplay loop muted></video>
+					      <canvas id="faceCanvas" width="640" height="480"></canvas>
 					    </div>
   					</div>
 				</div>
-
-				<div class='col-md-9'>
-					<textarea class='message' id='messageContents' placeholder={{this.messageContents}}>
-						{{this.messageContents}}
-					</textarea>
-				</div>
-				<div class='col-md-3'>
+				<div class='col-md-12'>
 					<button type="button" class="btn btn-default" id='startTracker'>Start Tracker</button>
 					<button type="button" class="btn btn-default" id='endTracker'>End Tracker</button>
 					<button type="button" class="btn btn-default" id='decryptButton'>Decrypt</button>
 				</div>
+				<div class='col-md-12'>
+					<textarea class='message' id='messageContents' placeholder={{this.messageContents}}>
+						{{this.messageContents}}
+					</textarea>
+				</div>
+
 			</div>
 		</div>
 	</div>
