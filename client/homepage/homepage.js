@@ -14,7 +14,7 @@ Template.homepage.events = {
 
 		Meteor.call('addUser',userName,userPassword1,userPassword2,userEmail, createdAt);
 
-		Router.go('/receiveMessage');
+		Router.go('/');
 	}
 }
 

@@ -23,22 +23,23 @@
   	  <button type="button" class="btn btn-default" id='cancel-signup'>Cancel</button>
   	 </div>
   </form>
-
-  <div class='container-fluid message-list'>
-    <div class='row'>
-      {{#each userMessages}}
-      <div class='col-sm-3'>
-        {{toUser}}
+  {{#if currentUser}}
+    <div class='container-fluid message-list'>
+      <div class='row'>
+        {{#each userMessages}}
+        <div class='col-sm-3'>
+          {{toUser}}
+        </div>
+        <div class='col-sm-6'>
+          <a href='receiveMessage/{{_id}}'>{{messageContents}}</a>
+        </div>
+        <div class='col-sm-3'>
+          {{timeSent}}
+        </div>
+        {{/each}}
       </div>
-      <div class='col-sm-6'>
-        <a href='receiveMessage/{{_id}}'>{{messageContents}}</a>
-      </div>
-      <div class='col-sm-3'>
-        {{timeSent}}
-      </div>
-      {{/each}}
     </div>
-  </div>
+  {{/if}}
 </body>
 
 </template>
