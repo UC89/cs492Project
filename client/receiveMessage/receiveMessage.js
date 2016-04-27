@@ -112,7 +112,7 @@ var trackerTask = tracking.track('#faceVideo', objects);
 
   $( "#decryptButton" ).click(function() {
     //var res = String.fromCharCode(72, 69, 76, 76, 79);
-    console.log('Clicked Decrypt: ')
+    console.log('\n\n\-----------\nClicked Decrypt: ')
     console.log("DetectionObject : "+detection);
     if (detection.length < 2) {
       console.log("Try again");
@@ -131,7 +131,7 @@ var trackerTask = tracking.track('#faceVideo', objects);
     var decryptMessageOut = decryptMessage(cryptoArray,detection);
     console.log("Decrypted: "+decryptMessageOut)
     $('#messageContents').attr ('value',decryptMessageOut);
-
+    console.log("-----------------------\n\n\n")
   });
 
 
@@ -223,7 +223,7 @@ function generatePublicKey(primes) {
     }
   }
   console.log("p: "+primes[0]+ "q: "+primes[1]+ " n: "+n+" totient: "+totient + " random: "+e);
-  var d = xgcd(e,totient);
+  var d = modinv(parseInt(e),parseInt(totient));
   console.log("modular multiplicative inverse: "+d)
   return [e,n,d];
 
@@ -241,6 +241,30 @@ function xgcd(e, totient) {
    d = temp[2];
    return x-y*Math.floor(e/totient);
  }
+//http://math.stackexchange.com/questions/67171/calculating-the-modular-multiplicative-inverse-without-all-those-strange-looking
+ function modinv(a,m) {
+    var v = 1;
+    var d = a;
+    var u = (a == 1);
+    var t = 1-u;
+    if (t == 1) {
+        var c = m % a;
+        u = Math.floor(m/a);
+        while (c != 1 && t == 1) {
+               var q = Math.floor(d/c);
+               d = d % c;
+               v = v + q*u;
+               t = (d != 1);
+               if (t == 1) {
+                   q = Math.floor(c/d);
+                   c = c % d;
+                   u = u + q*v;
+               }
+        }
+        u = v*(1 - t) + t*(m - u);
+    }
+    return u;
+}
 
 //c^d mod n
 function decryptMessage(messageArray,faceMeasurements) {
